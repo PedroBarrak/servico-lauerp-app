@@ -1,60 +1,75 @@
-import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  Alert,
-  Image,
-} from 'react-native';
-import { YellowBox } from 'react-native-web';
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { FontAwesome5, Entypo, MaterialIcons } from '@expo/vector-icons';
+
+const hoje = new Date();
+const dia = String(hoje.getDate()).padStart(2, '0');
+const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+const dataAtual = `${dia}/${mes}`;
 
 export default function Home() {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={estilos.container}>
+      <View style={estilos.cabecalho}>
         <Image
           source={require('../assets/lauerp-logo.png')}
-        style={styles.logo}
-        resizeMode="contain"
+          style={estilos.logo}
+          resizeMode="contain"
         />
-        <Text style={styles.headerTexto}>HOME ADMINISTRADOR</Text>
+        <Text style={estilos.textocabecalho}>Tela Inicial</Text>
       </View>
 
-      <View style={styles.barratopo}>
-        <Text style={styles.topotexto}>Data de Relatório Mensal</Text>
-        <Text style={styles.topodata}>15/06</Text>
+      <View style={estilos.barraTopo}>
+        <Text style={estilos.textoTopo}>Data de Relatório Mensal</Text>
+        <Text style={estilos.dataTopo}>{dataAtual}</Text>
       </View>
+
+      <TouchableOpacity style={[estilos.botao, { backgroundColor: '#FACC15' }]}>
+        <FontAwesome5 name="chart-bar" size={24} color="white" style={estilos.icone} />
+        <Text style={estilos.textoBotao}>Relatórios</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[estilos.botao, { backgroundColor: '#FB923C' }]}>
+        <Entypo name="users" size={24} color="white" style={estilos.icone} />
+        <Text style={estilos.textoBotao}>Chamada</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[estilos.botao, { backgroundColor: '#DC2626' }]}>
+        <MaterialIcons name="menu-book" size={24} color="white" style={estilos.icone} />
+        <Text style={estilos.textoBotao}>Alunos</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[estilos.botao, { backgroundColor: '#450A0A' }]}>
+        <FontAwesome5 name="calendar-alt" size={24} color="white" style={estilos.icone} />
+        <Text style={estilos.textoBotao}>Calendário</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const estilos = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // Substitua por gradiente se quiser
+    backgroundColor: '#fff',
     paddingTop: 40,
     paddingHorizontal: 20,
   },
-  header: {
+  cabecalho: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: 90,
+    height: 90,
     marginRight: 10,
   },
-  headerTexto: {
-    fontSize: 20,
+  textocabecalho: {
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
   },
-  barratopo: {
+  barraTopo: {
     backgroundColor: '#FACC15',
     height: 42,
     borderRadius: 4,
@@ -64,73 +79,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  topotexto: {
+  textoTopo: {
     fontWeight: 'bold',
     color: '#000',
   },
-  topodata: {
+  dataTopo: {
     fontWeight: 'bold',
     color: '#000',
   },
-});
-
-export default function Home() {
-
-
-  return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/lauerp-logo.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-      <Text style={styles.titulo}>Pagina Inicia Administrador</Text>
-      <View style={styles.barratopo}>
-        <Text style={styles.topotexto}>Data de Relatório Mensal</Text>
-        <Text style={styles.topodata}>15/06</Text>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff', // ou gradiente se estiver usando
-    paddingTop: 40,
-    paddingHorizontal: 20,
-  },
-  header: {
+  botao: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 15,
   },
-  logo: {
-    width: 50,
-    height: 50,
+  icone: {
     marginRight: 10,
   },
-  headerText: {
-    fontSize: 20,
+  textoBotao: {
+    color: '#fff',
     fontWeight: 'bold',
-    color: '#000',
-  },
-  topBar: {
-    backgroundColor: '#FACC15',
-    height: 42,
-    borderRadius: 4,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  topBarText: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  topBarDate: {
-    fontWeight: 'bold',
-    color: '#000',
+    fontSize: 16,
   },
 });

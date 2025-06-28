@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "expo": "^53.0.13",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-vector-icons": "^10.2.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "^18.0.0"
+  }
+}

@@ -1,18 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { FontAwesome5, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const hoje = new Date();
 const dia = String(hoje.getDate()).padStart(2, '0');
 const mes = String(hoje.getMonth() + 1).padStart(2, '0');
 const dataAtual = `${dia}/${mes}`;
 
-export default function Home() {
+export default function HomeProfessor() {
+
+  
   return (
     <View style={estilos.container}>
       <View style={estilos.cabecalho}>
         <Image
-          source={require('../assets/lauerp-logo.png')}
+          source={require('../../assets/lauerp-logo.png')}
           style={estilos.logo}
           resizeMode="contain"
         />

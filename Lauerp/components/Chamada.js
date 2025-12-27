@@ -130,7 +130,7 @@ const estilos = StyleSheet.create({
   titulocabecalho: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',W
+    color: '#000',
   },
   barraTopo: {
     backgroundColor: '#FACC15',

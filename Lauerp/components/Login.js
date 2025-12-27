@@ -7,17 +7,60 @@ import {
   Text,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
-export default function Login() {
-  const [matricula, setMatricula] = useState('');
-  const [senha, setSenha] = useState('');
+import { useNavigation } from '@react-navigation/native';
+import { jwtDecode } from 'jwt-decode';
+import { loginRequest } from '../services/api';
 
-  const handleLogin = () => {
-    if (!matricula || !senha) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
-    } else {
-      Alert.alert('Sucesso', `Bem-vindo(a), ${matricula}!`);
+export default function Login() {
+  const navigation = useNavigation();
+
+  // Renomeado para 'email' para maior clareza
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !senha) {
+      Alert.alert("Atenção", "Por favor, preencha seu e-mail e senha.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const data = { email, senha };
+      const { token } = await loginRequest(data);
+
+      console.log(token)
+      const decoded = jwtDecode(token);
+      const tipoUsuario = decoded?.role || decoded?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+      console.log("Tipo do usuário:", tipoUsuario);
+      Alert.alert("Sucesso", "Login realizado com sucesso!");
+
+      switch (tipoUsuario) {
+        case 'Admin':
+          navigation.navigate("HomeJogador", decoded?.nome);
+          break;
+        case 'Jogador':
+          navigation.navigate("HomeJogador", decoded?.nome);
+          break;
+        case 'Professor':
+          navigation.navigate("HomeProfessor", decoded?.nome);
+          break;
+        default:
+          Alert.alert("Erro", "Tivemos um erro ao identificar seu usuario.");
+      }
+
+      navigation.navigate("Home", { tipoUsuario });
+    } catch (error) {
+      console.error("Erro no login:", error.response?.data || error.message);
+      Alert.alert("Erro no Login", "E-mail ou senha inválidos. Por favor, tente novamente.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -33,14 +76,15 @@ export default function Login() {
         resizeMode="contain"
       />
 
-      <Text style={styles.label}>Matrícula:</Text>
+      <Text style={styles.label}>E-mail:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Digite sua matrícula"
-        value={matricula}
-        onChangeText={setMatricula}
+        placeholder="Digite seu e-mail"
+        value={email}
+        onChangeText={setEmail}
         autoCapitalize="none"
-        keyboardType="numeric"
+        keyboardType="email-address"
+        editable={!isLoading}
       />
 
       <Text style={styles.label}>Senha:</Text>
@@ -50,13 +94,23 @@ export default function Login() {
         value={senha}
         onChangeText={setSenha}
         secureTextEntry
+        editable={!isLoading}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
+      {/* O botão agora mostra um indicador de atividade quando está carregando */}
+      <TouchableOpacity
+        style={[styles.button, isLoading && styles.buttonDisabled]}
+        onPress={handleLogin}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#000" />
+        ) : (
+          <Text style={styles.buttonText}>Entrar</Text>
+        )}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleForgotPassword}>
+      <TouchableOpacity onPress={handleForgotPassword} disabled={isLoading}>
         <Text style={styles.forgotPassword}>Esqueci minha senha</Text>
       </TouchableOpacity>
     </View>
@@ -71,8 +125,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   logo: {
-    width: '100%',
-    height: 300,
+    width: '80%',
+    height: 150,
     alignSelf: 'center',
     marginBottom: 32,
   },
@@ -80,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 8,
+    color: '#333',
   },
   input: {
     height: 48,
@@ -89,6 +144,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     backgroundColor: '#fff',
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#F2BD1D',
@@ -96,6 +152,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginTop: 8,
     marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#F2BD1D_80', // Cor com opacidade para indicar que está desabilitado
   },
   buttonText: {
     color: '#000',
